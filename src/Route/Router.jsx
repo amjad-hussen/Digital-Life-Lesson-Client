@@ -1,0 +1,40 @@
+import { createBrowserRouter } from "react-router";
+import RootLayout from "../Layouts/RootLayout";
+import Home from "../Pages/Home/Home";
+import AuthLayout from "../Layouts/AuthLayout";
+import Login from "../Pages/Auth/Login";
+import Register from "../Pages/Auth/Register";
+import PublicLesson from "../Pages/PublicLesson/PublicLesson";
+import PrivateRoute from "./PrivateRoute";
+
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: RootLayout,
+    children: [
+        {
+            index:true,
+            Component: Home
+        },
+        {
+            path:'public-lesson',
+            element: <PrivateRoute> <PublicLesson></PublicLesson> </PrivateRoute>
+        }
+    ]
+  },
+  {
+    path:'/',
+    Component:AuthLayout,
+    children: [
+        {
+            path:'login',
+            Component: Login
+        },
+        {
+            path:'register',
+            Component: Register
+        },
+        
+    ]
+  }
+]);

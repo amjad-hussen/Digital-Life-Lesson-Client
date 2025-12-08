@@ -1,0 +1,16 @@
+/* li a.active {
+    background-color: #003220;
+    color: white;
+    font-weight: 600; 
+    padding: 0.5rem 0.75rem; 
+    border-radius: 0.25rem; 
+} */
+
+li a.active {
+   
+    color: #003220;
+    font-weight: 800; 
+    border-bottom: 4px solid #003220;
+    border-radius: 0;
+    
+}
