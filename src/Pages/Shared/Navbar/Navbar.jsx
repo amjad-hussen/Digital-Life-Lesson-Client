@@ -59,7 +59,7 @@ const Navbar = () => {
                                     <div className="w-10 rounded-full border border-gray-300">
                                         <img
                                             alt="profile"
-                                            src={user.photoURL || {userImg}}
+                                            src={user.photoURL || { userImg }}
                                         />
                                     </div>
                                 </div>
@@ -98,7 +98,11 @@ const Navbar = () => {
                         )
 
                         :
-                        <Link to={'/login'}> <button className='btn bg-green-700 rounded-md text-white font-semibold'>Login</button></Link>
+                        <div className='flex gap-3'>
+                            <Link to={'/login'}> <button className='btn bg-green-700 rounded-md text-white font-semibold'>Login</button></Link>
+                            
+                            <Link to={'/register'}> <button className='btn border-2 border-green-700  rounded-md text-primary font-semibold'>Register</button></Link>
+                        </div>
                 }
             </div>
         </div>
