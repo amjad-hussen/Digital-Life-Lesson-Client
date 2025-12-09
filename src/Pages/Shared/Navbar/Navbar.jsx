@@ -4,8 +4,14 @@ import logo from '../../../assets/logo-green.png'
 import userImg from '../../../assets/user.png'
 import { Link, NavLink } from 'react-router';
 import useAuth from '../../../Hooks/useAuth';
+import Loading from '../../../Component/SharedElement/Loading';
 const Navbar = () => {
-    const { user, logOut } = useAuth()
+    const { user, logOut, loading } = useAuth()
+    console.log(user)
+
+    if(loading){
+        return <Loading></Loading>
+    }
 
     const handleLogOut = () => {
         logOut()
@@ -22,8 +28,8 @@ const Navbar = () => {
 
     const links = <>
         <li><NavLink to={'/'}>Home</NavLink></li>
-        <li><NavLink to={'/add-lesson'}>Add Lesson</NavLink></li>
-        <li><NavLink to={'/my-lesson'}>My Lesson</NavLink></li>
+        <li><NavLink to={'/dashboard/add-lesson'}>Add Lesson</NavLink></li>
+        <li><NavLink to={'/dashboard/my-lesson'}>My Lesson</NavLink></li>
         <li><NavLink to={'/public-lesson'}>Public Lesson</NavLink></li>
         <li><NavLink to={'/upgrade'}>Upgrade</NavLink></li>
 
@@ -59,7 +65,7 @@ const Navbar = () => {
                                     <div className="w-10 rounded-full border border-gray-300">
                                         <img
                                             alt="profile"
-                                            src={user.photoURL || { userImg }}
+                                            src={user?.photoURL || userImg }
                                         />
                                     </div>
                                 </div>
@@ -69,7 +75,7 @@ const Navbar = () => {
                                     className="mt-3 z-100 p-3 shadow menu menu-sm dropdown-content bg-base-100 rounded-xl w-52 space-y-1"
                                 >
                                     <li className="text-center font-semibold py-1">
-                                        {user.displayName || "Guest"}
+                                        {user?.displayName || "Guest"}
                                     </li>
                                     <div className="divider my-0"></div>
 
