@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import useAuth from '../../Hooks/useAuth';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import { useForm } from 'react-hook-form';
 
 const MyLesson = () => {
 
     const { user } = useAuth()
     const axiosSecure = useAxiosSecure()
+    const updateRef = useRef()
+    const { register, handleSubmit, reset } = useForm()
 
     const { refetch, data: lessons = [] } = useQuery({
         queryKey: ['/myLesson', user?.email],
@@ -49,31 +52,60 @@ const MyLesson = () => {
 
     }
 
-    const handleDelete =(id) => {
+    const handleDelete = (id) => {
 
-         Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "Cancel",
-    }).then(async (result) => {
-        if (result.isConfirmed) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
 
-            const res = await axiosSecure.delete(`/lessons/${id}`);
-            
-            if (res.data.deletedCount) {
-                refetch();
+                const res = await axiosSecure.delete(`/lessons/${id}`);
 
-                Swal.fire({
+                if (res.data.deletedCount) {
+                    refetch();
+
+                    Swal.fire({
                         title: "Deleted!",
                         text: `Lesson has been deleted.`,
                         icon: "success"
                     });
-            } 
+                }
+            }
+        });
+
+    }
+
+    const handleOpenModal = (lesson) => {
+        updateRef.current.showModal()
+        reset(lesson)
+    }
+
+    const handleUpdate = async (data) => {
+
+        const updateData = {
+            lessonTitle: data.lessonTitle,
+            userName: data.userName,
+            email: data.email,
+            accessLevel: data.accessLevel,
+            description: data.description
+        };
+
+        const res = await axiosSecure.patch(`/lessons/${data._id}`, updateData)
+        if (res.data.modifiedCount) {
+            refetch();
+            Swal.fire({
+                title: "Updated!",
+                text: `Lesson updated successfully`,
+                icon: "success"
+            });
+
+            updateRef.current.close();
         }
-    });
 
     }
 
@@ -105,19 +137,15 @@ const MyLesson = () => {
                                 </td>
 
                                 <td className="flex items-center gap-2 py-2">
-                                    <input onChange={() => handleToggleVisibility(lesson)}  checked={lesson.privacy === "Private"} type="checkbox" className="toggle toggle-success" />
+                                    <input onChange={() => handleToggleVisibility(lesson)} checked={lesson.privacy === "Private"} type="checkbox" className="toggle toggle-success" />
                                     <span className="text-sm">
                                         Public / Private
                                     </span>
                                 </td>
                                 <td>
-                                    <select defaultValue="Select Access Level " className="select w-full">
-                                        <option disabled={true}>Access Level </option>
-                                        <option>Free</option>
-                                        <option>Premium</option>
-
-                                    </select>
+                                    {lesson.accessLevel === "Free" ? "Free" : "Premium"}
                                 </td>
+
                                 <td className=''>
                                     <div>
                                         <span className='mr-3'>❤️ 20k</span>
@@ -127,7 +155,7 @@ const MyLesson = () => {
 
                                 </td>
                                 <td className='flex gap-2'>
-                                    <button className='btn'> <FaEdit /> </button>
+                                    <button onClick={() => handleOpenModal(lesson)} className='btn'> <FaEdit /> </button>
                                     <button onClick={() => handleDelete(lesson._id)} className='btn'><RiDeleteBin6Line /></button>
                                     <button className='btn bg-green-700 hover:bg-green-800 text-white font-bold'> Details </button>
                                 </td>
@@ -138,7 +166,57 @@ const MyLesson = () => {
                     </tbody>
                 </table>
             </div>
-        </div>
+
+
+            {/* Modal for Update  */}
+
+
+            <dialog ref={updateRef} id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+                <div className="modal-box">
+                    <h1 className='text-2xl md:text-4xl text-center font-bold text-primary mb-3'>Update Lesson</h1>
+                    <p className='text-center text-sm text-gray-500 mt-2 border-b border-gray-200 pb-5'>Make changes to your lesson and save the updated version instantly.</p>
+
+
+                    <form onSubmit={handleSubmit(handleUpdate)} >
+
+                        {/* Lesson Title */}
+                        <label className="label font-bold text-black mt-5">Lesson Title</label>
+                        <input type="text" {...register('lessonTitle')} className="input focus:border-0 w-full mt-1" placeholder="Lesson Tittle" />
+
+
+                        {/* Your Name */}
+                        <label className="label font-bold text-black mt-3">Your Name</label>
+                        <input type="text" {...register('name')} defaultValue={user.displayName} className="input focus:border-0 w-full mt-1" placeholder="Your Name" />
+
+
+                        {/* User Email */}
+                        <label className="label font-bold text-black mt-3">Your Email</label>
+                        <input type="email" {...register('email')} defaultValue={user.email} className="input focus:border-0 w-full mt-1" placeholder="Your Email" />
+
+                        {/*Access Level  Field  */}
+                        <label className="label font-bold text-black mt-3">Access Level </label>
+                        <select defaultValue="Select Access Level " {...register('accessLevel')} className="select w-full mt-1">
+                            <option disabled={true}>Access Level </option>
+                            <option>Free</option>
+                            <option>Premium </option>
+
+                        </select>
+
+
+                        {/* Lesson Description  */}
+                        <label className="label font-bold text-black  mt-3">Lesson Description</label>
+                        <textarea className="textarea w-full focus:border-0 mt-1" {...register('description')} placeholder="Lesson Description "></textarea>
+
+                        <button className="btn w-1/2 bg-green-700 hover:bg-green-800 text-white font-bold mt-4">Add Lesson</button>
+
+
+                        <button type="button" className="btn mt-4 w-1/2 border-2 border-primary text-bold text-primary" onClick={() => updateRef.current.close()}>Close</button>
+
+                    </form>
+                </div>
+
+            </dialog >
+        </div >
     );
 };
 

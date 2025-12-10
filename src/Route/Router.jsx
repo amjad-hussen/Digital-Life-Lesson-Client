@@ -10,6 +10,7 @@ import DashboardLayout from "../Layouts/DashboardLayout";
 import AddLesson from "../Pages/Dashboard/AddLesson";
 import DashboardHome from "../Pages/Dashboard/DashboardHome ";
 import MyLesson from "../Pages/Dashboard/MyLesson";
+import Upgrade from "../Pages/Dashboard/Upgrade";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,11 @@ export const router = createBrowserRouter([
         {
             path:'public-lesson',
             element: <PublicLesson></PublicLesson>
+        },
+        
+        {
+            path: 'upgrade',
+            element: <PrivateRoute> <Upgrade></Upgrade></PrivateRoute>
         }
     ]
   }, 

@@ -59,7 +59,7 @@ const AddLesson = () => {
                             <label className="label font-bold text-black">Your Name</label>
                             <input type="text" {...register('name')} defaultValue={user.displayName} className="input focus:border-0 w-full" placeholder="Your Name" />
 
-                            {/* Lesson Title */}
+                            {/* User Email */}
                             <label className="label font-bold text-black">Your Email</label>
                             <input type="email" {...register('email')} defaultValue={user.email} className="input focus:border-0 w-full" placeholder="Your Email" />
 

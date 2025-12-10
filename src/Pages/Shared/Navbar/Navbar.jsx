@@ -9,7 +9,7 @@ const Navbar = () => {
     const { user, logOut, loading } = useAuth()
     console.log(user)
 
-    if(loading){
+    if (loading) {
         return <Loading></Loading>
     }
 
@@ -28,10 +28,16 @@ const Navbar = () => {
 
     const links = <>
         <li><NavLink to={'/'}>Home</NavLink></li>
-        <li><NavLink to={'/dashboard/add-lesson'}>Add Lesson</NavLink></li>
-        <li><NavLink to={'/dashboard/my-lesson'}>My Lesson</NavLink></li>
         <li><NavLink to={'/public-lesson'}>Public Lesson</NavLink></li>
-        <li><NavLink to={'/upgrade'}>Upgrade</NavLink></li>
+        {
+            user && <>
+                <li><NavLink to={'/dashboard/add-lesson'}>Add Lesson</NavLink></li>
+                <li><NavLink to={'/dashboard/my-lesson'}>My Lesson</NavLink></li>
+
+                <li><NavLink to={'/upgrade'}>Upgrade</NavLink></li>
+            </>
+        }
+
 
     </>
 
@@ -65,7 +71,7 @@ const Navbar = () => {
                                     <div className="w-10 rounded-full border border-gray-300">
                                         <img
                                             alt="profile"
-                                            src={user?.photoURL || userImg }
+                                            src={user?.photoURL || userImg}
                                         />
                                     </div>
                                 </div>
@@ -106,7 +112,7 @@ const Navbar = () => {
                         :
                         <div className='flex gap-3'>
                             <Link to={'/login'}> <button className='btn bg-green-700 rounded-md text-white font-semibold'>Login</button></Link>
-                            
+
                             <Link to={'/register'}> <button className='btn border-2 border-green-700  rounded-md text-primary font-semibold'>Register</button></Link>
                         </div>
                 }
