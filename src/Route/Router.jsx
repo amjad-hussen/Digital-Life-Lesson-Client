@@ -10,7 +10,9 @@ import DashboardLayout from "../Layouts/DashboardLayout";
 import AddLesson from "../Pages/Dashboard/AddLesson";
 import DashboardHome from "../Pages/Dashboard/DashboardHome ";
 import MyLesson from "../Pages/Dashboard/MyLesson";
-import Upgrade from "../Pages/Dashboard/Upgrade";
+import Upgrade from "../Pages/Payment/Upgrade";
+import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
+import PaymentCancelled from "../Pages/Payment/PaymentCancelled";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +31,14 @@ export const router = createBrowserRouter([
         {
             path: 'upgrade',
             element: <PrivateRoute> <Upgrade></Upgrade></PrivateRoute>
+        },
+        {
+            path: 'payment-success',
+            element: <PrivateRoute> <PaymentSuccess></PaymentSuccess></PrivateRoute>
+        },
+        {
+            path: 'payment-cancelled',
+            element: <PrivateRoute> <PaymentCancelled></PaymentCancelled></PrivateRoute>
         }
     ]
   }, 

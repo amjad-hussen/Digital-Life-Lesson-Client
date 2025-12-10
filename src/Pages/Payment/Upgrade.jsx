@@ -1,7 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router';
+import useAuth from '../../Hooks/useAuth';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const Upgrade = () => {
+    const {user} = useAuth()
+    const axiosSecure = useAxiosSecure()
+
+    const handlePayment = async() => {
+        const paymentInfo = {
+            email : user.email
+        }
+        const res = await axiosSecure.post('/create-checkout-session', paymentInfo)
+        window.location.href =res.data.url
+
+    }
+
     return (
         <div className='bg-white my-5 mx-10 p-10 rounded-xl'>
             <div className='text-center'>
@@ -70,7 +84,7 @@ const Upgrade = () => {
                 </div>
             </div>
 
-             <Link className='flex justify-center mt-10'> <button className='btn bg-green-700 rounded-md text-white font-semibold text-xl  shadow-2xl px-10 py-6 '>Upgrade to Premium</button></Link>
+             <Link className='flex justify-center mt-10'> <button onClick={handlePayment} className='btn bg-green-700 rounded-md text-white font-semibold text-xl  shadow-2xl px-10 py-6 '>Upgrade Now (৳1500)</button></Link>
         </div>
     );
 };

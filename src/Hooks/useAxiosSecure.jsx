@@ -7,7 +7,7 @@ const axiosSecure =axios.create({
 }) 
 
 const useAxiosSecure = () => {
-    const {user}= useAuth
+    const {user}= useAuth()
 
     useEffect( () => {
         // Intercept the request
