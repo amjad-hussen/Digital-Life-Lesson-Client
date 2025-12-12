@@ -5,6 +5,7 @@ import SocialLogin from './SocialLogin';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../Hooks/useAuth';
 import axios from 'axios';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const Register = () => {
 
@@ -12,14 +13,15 @@ const Register = () => {
     const { createUser, updateUserProfile } = useAuth()
     const location = useLocation()
     const navigate = useNavigate()
+    const axiosSecure = useAxiosSecure()
 
     const handleRegister = (data) => {
-        console.log('handleregister', data.photo[0])
+        
         const profileImage = data.photo[0];
 
         createUser(data.email, data.password)
-            .then(result => {
-                console.log(result.user)
+            .then(() => {
+                
 
                 // Store the image for getting the photoURL
                 const formData = new FormData()
@@ -29,12 +31,25 @@ const Register = () => {
                 
                 axios.post(image_API_URL, formData)
                 .then( res => {
-                    console.log('after image uploaded', res.data.data.url)
+                    const photoURL = res.data.data.url
+
+                    // create user  in the database
+                    const userInfo = {
+                        email: data.email,
+                        displayName: data.name,
+                        photoURL:photoURL
+                    }
+                    axiosSecure.post('/users', userInfo)
+                    .then(res => {
+                        if(res.data.inserted) {
+                            console.log('user created in the database')
+                        }
+                    })
 
                     // update User Profile
                     const userProfile = {
                         displayName: data.name,
-                        photoURL: res.data.data.url 
+                        photoURL:photoURL
                     }
                     updateUserProfile(userProfile)
                     .then( ( )=>{

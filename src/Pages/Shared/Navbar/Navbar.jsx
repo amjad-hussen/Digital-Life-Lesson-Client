@@ -24,8 +24,6 @@ const Navbar = () => {
     }
 
 
-
-
     const links = <>
         <li><NavLink to={'/'}>Home</NavLink></li>
         <li><NavLink to={'/public-lesson'}>Public Lesson</NavLink></li>
@@ -34,7 +32,16 @@ const Navbar = () => {
                 <li><NavLink to={'/dashboard/add-lesson'}>Add Lesson</NavLink></li>
                 <li><NavLink to={'/dashboard/my-lesson'}>My Lesson</NavLink></li>
 
-                <li><NavLink to={'/upgrade'}>Upgrade</NavLink></li>
+                
+                {user.isPremium === true || user.isPremium === 'true' ? (
+                    <li className="flex items-center">
+                        <span className="badge badge-success">Premium ⭐</span>
+                    </li>
+                ) : (
+                    <li>
+                        <NavLink to={'/upgrade'}>Upgrade to Premium</NavLink>
+                    </li>
+                )}
             </>
         }
 
