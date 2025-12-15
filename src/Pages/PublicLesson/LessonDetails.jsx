@@ -1,5 +1,5 @@
 import { useQueryClient, useQuery } from '@tanstack/react-query';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import Loading from '../../Component/SharedElement/Loading';
@@ -13,6 +13,7 @@ const LessonDetails = () => {
     const reportRef = useRef()
     const { user } = useAuth()
     const queryClient = useQueryClient();
+    const [newComment, setNewComment] = useState('');
 
     const { register, handleSubmit, reset } = useForm()
 
@@ -29,16 +30,25 @@ const LessonDetails = () => {
     const { data: authorLessons = [] } = useQuery({
         queryKey: ['authorLessons', lesson.email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/lessons?email=${email}`)
+            if (!lesson.email) return [];
+            const res = await axiosSecure.get(`/lessons?email=${lesson.email}`)
             return res.data
+        },
+        enabled: !!lesson.email
+    })
+
+    const { data: comments = [], refetch: refetchComments } = useQuery({
+        queryKey: ['comments', id],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/lessons/${id}/comments`);
+            return res.data;
         }
     })
 
-    const { accessLevel, category, _id, createdAt, description, email, emotionalTone, lessonTitle, photoURL, privacy, reactionsCount, savesCount, updatedAt, userName } = lesson
 
-    if (isLoading) {
-        return <Loading></Loading>
-    }
+    const { accessLevel, category, _id, createdAt, description, emotionalTone, lessonTitle, photoURL, privacy, reactionsCount, savesCount, updatedAt, userName } = lesson
+
+
 
     const handleLike = async () => {
         if (!user) {
@@ -122,6 +132,33 @@ const LessonDetails = () => {
     }
 
 
+
+    const handlePostComment = async () => {
+        if (!user) {
+            Swal.fire('Please log in to comment');
+            return;
+        }
+
+        if (!newComment.trim()) return;
+
+        const commentData = {
+            text: newComment,
+            userName: user.displayName || user.email
+        };
+
+        const res = await axiosSecure.post(`/lessons/${id}/comment`, commentData);
+
+        if (res.data.success) {
+            setNewComment('');
+            refetchComments()
+        }
+    };
+
+    if (isLoading) {
+        return <Loading></Loading>
+    }
+
+
     return (
         <div className='bg-white p-10 my-5 rounded-xl'>
             <div className='flex gap-10 '>
@@ -174,8 +211,8 @@ const LessonDetails = () => {
                                 <button
                                     onClick={handleFavorite}
                                     className={`btn ${savedByUser
-                                            ? 'bg-yellow-500 text-white'
-                                            : 'border-primary text-primary'
+                                        ? 'bg-yellow-500 text-white'
+                                        : 'border-primary text-primary'
                                         }`}
                                 >
                                     {savedByUser ? 'Remove Favorite' : 'Save to Favorites'}
@@ -206,6 +243,45 @@ const LessonDetails = () => {
 
                 </div>
             </div>
+
+            {/* Comment Sections */}
+            <div className="mt-10">
+                <h2 className="text-2xl font-bold mb-3">Comments</h2>
+
+                {user && (
+                    <div className="flex gap-2 mb-4">
+                        <input
+                            type="text"
+                            placeholder="Write a comment..."
+                            className="input flex-1"
+                            value={newComment}
+                            onChange={e => setNewComment(e.target.value)}
+                        />
+                        <button
+                            onClick={handlePostComment}
+                            className="btn bg-green-700 text-white"
+                        >
+                            Post
+                        </button>
+                    </div>
+                )}
+
+                {comments.length === 0 && <p>No comments yet.</p>}
+
+                <div className="flex flex-col gap-3">
+                    {comments.map(comment => (
+                        <div key={comment._id} className="border p-3 rounded">
+                            <p className="font-bold">{comment.userName}</p>
+                            <p>{comment.text}</p>
+                            <p className="text-xs text-gray-500">
+                                {new Date(comment.createdAt).toLocaleString()}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+
 
 
             {/* Report Modal */}
