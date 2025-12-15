@@ -46,6 +46,23 @@ const LessonDetails = () => {
     })
 
 
+    const { data: recommendedLessons = [] } = useQuery({
+        queryKey: ['recommendedLessons', lesson._id],
+        queryFn: async () => {
+            if (!lesson._id) return [];
+
+            const res = await axiosSecure.get(
+                `/lessons/recommended?category=${lesson.category}&emotionalTone=${lesson.emotionalTone}&excludeId=${lesson._id}&limit=6`
+            );
+            return res.data;
+        },
+        enabled: !!lesson._id
+    });
+
+
+
+
+
     const { accessLevel, category, _id, createdAt, description, emotionalTone, lessonTitle, photoURL, privacy, reactionsCount, savesCount, updatedAt, userName } = lesson
 
 
@@ -276,6 +293,24 @@ const LessonDetails = () => {
                             <p className="text-xs text-gray-500">
                                 {new Date(comment.createdAt).toLocaleString()}
                             </p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+
+            {/* Similar and Recommended Lesson */}
+            <div className="mt-10">
+                <h2 className="text-2xl md:text-4xl text-primary text-center font-bold mb-3 mt-10">Similar & Recommended Lessons</h2>
+
+                {recommendedLessons.length === 0 && <p>No recommendations available.</p>}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-5">
+                    {recommendedLessons.map((rec) => (
+                        <div key={rec._id} className="border rounded p-4 hover:shadow-lg transition cursor-pointer">
+                            <h3 className="font-bold text-lg">{rec.lessonTitle}</h3>
+                            <p className="text-sm text-gray-500">{rec.description?.slice(0, 60)}...</p>
+                            <p className="text-xs mt-1">Category: {rec.category}</p>
+                            <p className="text-xs">Tone: {rec.emotionalTone}</p>
                         </div>
                     ))}
                 </div>
