@@ -5,11 +5,24 @@ import userImg from '../../../assets/user.png'
 import { Link, NavLink } from 'react-router';
 import useAuth from '../../../Hooks/useAuth';
 import Loading from '../../../Component/SharedElement/Loading';
+import { useQuery } from '@tanstack/react-query';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 const Navbar = () => {
     const { user, logOut, loading } = useAuth()
-    console.log(user)
+    const axiosSecure = useAxiosSecure()
 
-    if (loading) {
+    const { refetch, data: currentUser , isLoading} = useQuery({
+        queryKey: ['users', user?.email],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/users?email=${user.email}`)
+            refetch()
+            return res.data
+        }
+
+    })
+    
+
+    if (loading || isLoading) {
         return <Loading></Loading>
     }
 
@@ -32,16 +45,13 @@ const Navbar = () => {
                 <li><NavLink to={'/dashboard/add-lesson'}>Add Lesson</NavLink></li>
                 <li><NavLink to={'/dashboard/my-lesson'}>My Lesson</NavLink></li>
 
-                
-                {user.isPremium === true || user.isPremium === 'true' ? (
-                    <li className="flex items-center">
-                        <span className="badge badge-success">Premium ⭐</span>
-                    </li>
+
+                {currentUser?.isPremium ? (
+                    <li><span>Premium ⭐</span></li>
                 ) : (
-                    <li>
-                        <NavLink to={'/upgrade'}>Upgrade to Premium</NavLink>
-                    </li>
+                    <li><NavLink to="/upgrade">Upgrade to Premium</NavLink></li>
                 )}
+
             </>
         }
 

@@ -13,6 +13,7 @@ import MyLesson from "../Pages/Dashboard/MyLesson";
 import Upgrade from "../Pages/Payment/Upgrade";
 import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
 import PaymentCancelled from "../Pages/Payment/PaymentCancelled";
+import LessonDetails from "../Pages/PublicLesson/LessonDetails";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
         {
             path:'public-lesson',
             element: <PublicLesson></PublicLesson>
+        },
+        {
+            path:'lessons/:id',
+            element: <PrivateRoute><LessonDetails></LessonDetails></PrivateRoute>
         },
         
         {

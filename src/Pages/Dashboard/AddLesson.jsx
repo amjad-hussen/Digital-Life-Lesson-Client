@@ -13,6 +13,7 @@ const AddLesson = () => {
         const lessonData = {
             lessonTitle: data.lessonTitle,
             userName: user.displayName,
+            photoURL : user.photoURL,
             email: user.email,
             category: data.category,
             emotionalTone: data.emotionalTone,
@@ -22,11 +23,11 @@ const AddLesson = () => {
 
             createdAt: new Date(),
             updatedAt: new Date(),
+            likes: [],
             reactionsCount: 0,
             savesCount: 0,
             premiumUser: false
         }
-        console.log( 'in the add lesson field0',lessonData)
 
         axiosSecure.post('/lessons', lessonData)
             .then(res => {
@@ -57,11 +58,11 @@ const AddLesson = () => {
 
                             {/* Your Name */}
                             <label className="label font-bold text-black">Your Name</label>
-                            <input type="text" {...register('name')} defaultValue={user.displayName} className="input focus:border-0 w-full" placeholder="Your Name" />
+                            <input type="text" {...register('name')} Value={user.displayName} readOnly className="input focus:border-0 w-full" placeholder="Your Name" />
 
                             {/* User Email */}
                             <label className="label font-bold text-black">Your Email</label>
-                            <input type="email" {...register('email')} defaultValue={user.email} className="input focus:border-0 w-full" placeholder="Your Email" />
+                            <input type="email" {...register('email')} Value={user.email} readOnly className="input focus:border-0 w-full" placeholder="Your Email" />
 
                             {/*Category Field  */}
                             <label className="label font-bold text-black mt-1">Select Category</label>
