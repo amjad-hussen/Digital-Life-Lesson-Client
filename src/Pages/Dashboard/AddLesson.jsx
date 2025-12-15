@@ -25,6 +25,7 @@ const AddLesson = () => {
             updatedAt: new Date(),
             likes: [],
             reactionsCount: 0,
+            saves: [],
             savesCount: 0,
             premiumUser: false
         }

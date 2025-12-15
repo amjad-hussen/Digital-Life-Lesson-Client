@@ -17,7 +17,7 @@ const LessonDetails = () => {
     const { register, handleSubmit, reset } = useForm()
 
 
-    const { data: lesson = {}, isLoading } = useQuery({
+    const { data: lesson = {}, isLoading, refetch } = useQuery({
         queryKey: ['lesson', id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/lessons/${id}`)
@@ -54,8 +54,8 @@ const LessonDetails = () => {
 
                 return {
                     ...old,
-                    likes: res.data.likes,                 
-                    reactionsCount: res.data.reactionsCount 
+                    likes: res.data.likes,
+                    reactionsCount: res.data.reactionsCount
                 };
             });
         }
@@ -64,6 +64,21 @@ const LessonDetails = () => {
 
     const likedByUser = user && lesson.likes?.includes(user.email);
 
+
+    const handleFavorite = async () => {
+        if (!user) {
+            Swal.fire('Please log in to save');
+            return;
+        }
+
+        const res = await axiosSecure.patch(`/lessons/${id}/favorite`);
+
+        if (res.data.success) {
+            refetch();
+        }
+    };
+
+    const savedByUser = user && lesson.saves?.includes(user.email);
 
     const handleReportModal = () => {
         Swal.fire({
@@ -156,7 +171,15 @@ const LessonDetails = () => {
                                     {likedByUser ? 'Unlike' : 'Like'}
                                 </button>
 
-                                <button className="btn bg-green-700 hover:bg-green-800 text-white font-bold mt-auto">Add Favorites</button>
+                                <button
+                                    onClick={handleFavorite}
+                                    className={`btn ${savedByUser
+                                            ? 'bg-yellow-500 text-white'
+                                            : 'border-primary text-primary'
+                                        }`}
+                                >
+                                    {savedByUser ? 'Remove Favorite' : 'Save to Favorites'}
+                                </button>
 
 
                             </div>
@@ -167,13 +190,11 @@ const LessonDetails = () => {
 
 
 
-                            <div className='flex flex-col gap-2'>
-
-                                <button className="btn border-3 border-primary text-primary font-bold mt-3">Remove Favorites</button>
+                            <div className='flex flex-col gap-2 mt-5'>
 
                                 <button onClick={() => handleReportModal(_id)} className="btn bg-green-700 hover:bg-green-800 text-white font-bold mt-auto">Report</button>
 
-                                <button className="btn border-3 border-primary text-primary font-bold ">Share</button>
+                                <button className="btn border-3 border-primary text-primary font-bold mt-2">Share</button>
                             </div>
 
 
