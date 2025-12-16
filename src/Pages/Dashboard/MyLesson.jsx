@@ -6,6 +6,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router';
 
 const MyLesson = () => {
 
@@ -157,7 +158,7 @@ const MyLesson = () => {
                                 <td className='flex gap-2'>
                                     <button onClick={() => handleOpenModal(lesson)} className='btn'> <FaEdit /> </button>
                                     <button onClick={() => handleDelete(lesson._id)} className='btn'><RiDeleteBin6Line /></button>
-                                    <button className='btn bg-green-700 hover:bg-green-800 text-white font-bold'> Details </button>
+                                    <Link to={`/lessons/${lesson._id}`} className='btn bg-green-700 hover:bg-green-800 text-white font-bold'> Details </Link>
                                 </td>
                             </tr>)
                         }
