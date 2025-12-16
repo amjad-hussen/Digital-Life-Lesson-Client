@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import useAuth from '../../Hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import banner from '../../assets/download.jpeg'
 import Loading from '../../Component/SharedElement/Loading';
 import { Link } from 'react-router';
+import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
 
 const Profile = () => {
     const { user } = useAuth()
     const axiosSecure = useAxiosSecure()
+    const updateRef = useRef()
 
-    const { data: dbUser, isLoading } = useQuery({
+    const { register, handleSubmit} = useForm()
+
+    const { data: dbUser, isLoading, refetch,  } = useQuery({
         queryKey: ['users', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/users?email=${user?.email}`)
@@ -33,7 +38,27 @@ const Profile = () => {
             return res.data;
         }
     });
-    console.log(mySavedLessons)
+
+    const handleOpenModal = () => {
+        updateRef.current.showModal()
+    }
+
+    const handleUpdate = async (data) => {
+        const updatedData = {
+            displayName: data.name,
+        }
+        const res = await axiosSecure.patch(`/users/${user.email}`, updatedData)
+        console.log(res.data)
+        updateRef.current.close()
+        if (res.data?.result?.modifiedCount > 0) {
+            refetch()
+            Swal.fire({
+                title: "Updated !",
+                text: "Your Profile Updated Successfully.",
+                icon: "success"
+            });
+        }
+    }
 
 
     if (isLoading || isLessonsLoading || isSavedLoading) {
@@ -60,14 +85,14 @@ const Profile = () => {
                         :
                         <button className='btn-sm rounded-full bg-green-700 text-sm text-white font-semibold py-1 px-3 mt-2'> Free </button>}
                 </div>
-                <h1 className='text-primary font-bold text-2xl md:text-4xl text-center'>{displayName}</h1>
+                <h1 className='text-primary font-bold text-2xl md:text-4xl text-center mt-1'>{displayName}</h1>
                 <p className='text-sm font-semibold text-primary text-center mt-1'>{email}</p>
                 <div className='px-10 flex gap-3 justify-between items-center my-4'>
                     <div className='text-primary font-semibold'>
                         <p>My Created Lesson : {myLessons.length} </p>
                         <p>My Saved Lesson: {mySavedLessons.length} </p>
                     </div>
-                    <button className='btn bg-green-700 font-bold text-white'>Update Profile</button>
+                    <button onClick={handleOpenModal} className='btn bg-green-700 font-bold text-white'>Update Profile</button>
                 </div>
             </div>
 
@@ -103,6 +128,40 @@ const Profile = () => {
                     }
                 </div>
             </div>
+
+            {/* Update Profile Modal  */}
+            {/* Open the modal using document.getElementById('ID').showModal() method */}
+
+            <dialog ref={updateRef} className="modal modal-bottom sm:modal-middle">
+                <div className="modal-box">
+                    <h3 className="font-bold text-2xl md:text-4xl text-primary text-center">Update Profile</h3>
+                    <form onSubmit={handleSubmit(handleUpdate)} >
+                        <fieldset className="fieldset px-10">
+                            {/* Email Field */}
+
+                            <label className="label text-black font-bold">Email</label>
+                            <input type="email" {...register('email',)} value={email} readOnly className="input focus:border-0 w-full" placeholder="Email" />
+
+                            {/* Your Name Field */}
+                            <label className="label text-black font-bold ">Your Name</label>
+                            <input type="text" {...register('name', { required: true })} defaultValue={displayName} className="input focus:border-0 w-full" placeholder="Your Name" />
+
+
+                            <button className="btn bg-green-700 text-white font-bold mt-4">Update Now</button>
+                            <div className="modal-action">
+                                <form method="dialog">
+                                    {/* if there is a button in form, it will close the modal */}
+                                    <button className="btn">Close</button>
+                                </form>
+                            </div>
+
+
+                        </fieldset>
+
+                    </form>
+
+                </div>
+            </dialog>
         </div>
     );
 };
