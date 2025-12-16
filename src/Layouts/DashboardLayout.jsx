@@ -2,7 +2,8 @@ import React from 'react';
 import logo from '../assets/logo-green.png'
 import { Link, Outlet } from 'react-router';
 import { MdAddCircleOutline, MdNoteAdd } from 'react-icons/md';
-import { FaUserGraduate } from 'react-icons/fa';
+import { FaUserAlt, FaUserGraduate } from 'react-icons/fa';
+import { FaHeartPulse } from 'react-icons/fa6';
 
 const DashboardLayout = () => {
     return (
@@ -61,6 +62,24 @@ const DashboardLayout = () => {
                                 
                                 <FaUserGraduate />
                                 <span className="is-drawer-close:hidden">My Lesson</span>
+                            </Link>
+                        </li>
+
+                        {/* My favorites Page */}
+                        <li>
+                            <Link to={'my-favorites'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip=" My favorites">
+                                
+                                <FaHeartPulse />
+                                <span className="is-drawer-close:hidden"> My favorites</span>
+                            </Link>
+                        </li>
+
+                        {/* Profile Page */}
+                        <li>
+                            <Link to={'profile'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Profile">
+                                
+                                <FaUserAlt />
+                                <span className="is-drawer-close:hidden">Profile</span>
                             </Link>
                         </li>
 

@@ -103,7 +103,7 @@ const Navbar = () => {
                                     <div className="divider my-0"></div>
 
                                     <li>
-                                        <Link to="/profile" className="hover:bg-gray-200 rounded-lg">
+                                        <Link to="/dashboard/profile" className="hover:bg-gray-200 rounded-lg">
                                             Profile
                                         </Link>
                                     </li>
