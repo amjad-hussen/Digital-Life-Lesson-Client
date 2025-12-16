@@ -140,7 +140,7 @@ const Profile = () => {
                             {/* Email Field */}
 
                             <label className="label text-black font-bold">Email</label>
-                            <input type="email" {...register('email',)} value={email} readOnly className="input focus:border-0 w-full" placeholder="Email" />
+                            <input type="email" {...register('email',)} defaultValue={email} readOnly className="input focus:border-0 w-full" placeholder="Email" />
 
                             {/* Your Name Field */}
                             <label className="label text-black font-bold ">Your Name</label>

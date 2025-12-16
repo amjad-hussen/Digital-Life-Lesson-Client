@@ -16,6 +16,7 @@ import PaymentCancelled from "../Pages/Payment/PaymentCancelled";
 import LessonDetails from "../Pages/PublicLesson/LessonDetails";
 import Favorites from "../Pages/Dashboard/Favorites";
 import Profile from "../Pages/Dashboard/Profile";
+import ManageUsers from "../Pages/AdminDashboard/ManageUsers";
 
 export const router = createBrowserRouter([
   {
@@ -89,6 +90,11 @@ export const router = createBrowserRouter([
         {
             path: 'profile',
             Component: Profile
+        },
+
+        {
+            path: 'manage-users',
+            Component: ManageUsers
         }
     ]
   }

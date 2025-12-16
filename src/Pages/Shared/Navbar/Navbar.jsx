@@ -109,7 +109,7 @@ const Navbar = () => {
                                     </li>
 
                                     <li>
-                                        <Link to="/dashboard" className="hover:bg-gray-200 rounded-lg">
+                                        <Link to="/dashboard/home" className="hover:bg-gray-200 rounded-lg">
                                             Dashboard
                                         </Link>
                                     </li>

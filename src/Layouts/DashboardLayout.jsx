@@ -2,7 +2,7 @@ import React from 'react';
 import logo from '../assets/logo-green.png'
 import { Link, Outlet } from 'react-router';
 import { MdAddCircleOutline, MdNoteAdd } from 'react-icons/md';
-import { FaUserAlt, FaUserGraduate } from 'react-icons/fa';
+import { FaUser, FaUserAlt, FaUserGraduate } from 'react-icons/fa';
 import { FaHeartPulse } from 'react-icons/fa6';
 
 const DashboardLayout = () => {
@@ -35,7 +35,7 @@ const DashboardLayout = () => {
                     {/* Sidebar content here */}
                     <ul className="menu w-full grow">
 
-                        {/* Sidebar List Items */}
+                        {/* User Dashboard */}
 
                         {/* Home Page */}
                         <li>
@@ -49,7 +49,7 @@ const DashboardLayout = () => {
                         {/* Add Lesson Page */}
                         <li>
                             <Link to={'add-lesson'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Add Lesson">
-                                
+
                                 <MdAddCircleOutline />
                                 <span className="is-drawer-close:hidden">Add Lesson</span>
                             </Link>
@@ -59,7 +59,7 @@ const DashboardLayout = () => {
                         {/* My Lesson Page */}
                         <li>
                             <Link to={'my-lesson'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Lesson">
-                                
+
                                 <FaUserGraduate />
                                 <span className="is-drawer-close:hidden">My Lesson</span>
                             </Link>
@@ -68,7 +68,7 @@ const DashboardLayout = () => {
                         {/* My favorites Page */}
                         <li>
                             <Link to={'my-favorites'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip=" My favorites">
-                                
+
                                 <FaHeartPulse />
                                 <span className="is-drawer-close:hidden"> My favorites</span>
                             </Link>
@@ -77,11 +77,23 @@ const DashboardLayout = () => {
                         {/* Profile Page */}
                         <li>
                             <Link to={'profile'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Profile">
-                                
+
                                 <FaUserAlt />
                                 <span className="is-drawer-close:hidden">Profile</span>
                             </Link>
                         </li>
+
+
+                        {/* Admin Dashboard */}
+
+                        <li>
+                            <Link to={'manage-users'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Manage Users">
+
+                                <FaUser />
+                                <span className="is-drawer-close:hidden"> Manage Users</span>
+                            </Link>
+                        </li>
+
 
                         {/* List item */}
                         <li>

@@ -59,7 +59,7 @@ const Favorites = () => {
 
     return (
         <div className="mb-8 text-center">
-            <h1 className="text-4xl font-bold text-primary">My Favorites</h1>
+            <h1 className="text-2xl md:text-4xl font-bold text-primary">My Favorites</h1>
             <p className="text-gray-500 text-lg mt-2 border-b border-gray-200 pb-5">
                 Here are all the lessons you have saved. You can view details or remove them from your favorites.
             </p>
