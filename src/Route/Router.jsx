@@ -19,6 +19,7 @@ import Profile from "../Pages/Dashboard/Profile";
 import ManageUsers from "../Pages/AdminDashboard/ManageUsers";
 import AdminRoutes from "./AdminRoutes";
 import ManageLessons from "../Pages/AdminDashboard/ManageLessons";
+import AdminProfile from "../Pages/AdminDashboard/AdminProfile";
 
 export const router = createBrowserRouter([
   {
@@ -101,6 +102,10 @@ export const router = createBrowserRouter([
         {
             path: 'manage-lessons',
             element: <AdminRoutes> <ManageLessons></ManageLessons></AdminRoutes>
+        },
+        {
+            path: 'admin-profile',
+            element: <AdminRoutes><AdminProfile></AdminProfile></AdminRoutes>
         },
     ]
   }

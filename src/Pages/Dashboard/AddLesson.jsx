@@ -28,6 +28,7 @@ const AddLesson = () => {
             saves: [],
             savesCount: 0,
             isFeatured: false,
+            isReviewed: false,
             premiumUser: false
         }
 

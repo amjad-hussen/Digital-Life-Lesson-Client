@@ -121,6 +121,14 @@ const DashboardLayout = () => {
                                         <span className="is-drawer-close:hidden">Manage Lessons</span>
                                     </Link>
                                 </li>
+
+                                <li>
+                                    <Link to={'admin-profile'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Admin Profile">
+
+                                        <FaUserAlt />
+                                        <span className="is-drawer-close:hidden"> Admin Profile</span>
+                                    </Link>
+                                </li>
                             </>
                         }
 
