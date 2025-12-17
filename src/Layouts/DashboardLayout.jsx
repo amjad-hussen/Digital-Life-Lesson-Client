@@ -4,8 +4,17 @@ import { Link, Outlet } from 'react-router';
 import { MdAddCircleOutline, MdNoteAdd } from 'react-icons/md';
 import { FaUser, FaUserAlt, FaUserGraduate } from 'react-icons/fa';
 import { FaHeartPulse } from 'react-icons/fa6';
+import useRole from '../Hooks/useRole';
+import Loading from '../Component/SharedElement/Loading';
 
 const DashboardLayout = () => {
+
+    const { role, isLoading } = useRole()
+
+    if (isLoading) {
+        return <Loading></Loading>
+    }
+
     return (
         <div className="drawer lg:drawer-open max-w-7xl mx-auto bg-gray-100">
             <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -35,64 +44,86 @@ const DashboardLayout = () => {
                     {/* Sidebar content here */}
                     <ul className="menu w-full grow">
 
-                        {/* User Dashboard */}
+                        {
+                            role === 'user' && <>
+                                {/* User Dashboard */}
 
-                        {/* Home Page */}
-                        <li>
-                            <Link to={'home'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Homepage">
-                                {/* Home icon */}
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-                                <span className="is-drawer-close:hidden">Homepage</span>
-                            </Link>
-                        </li>
+                                {/* Home Page */}
+                                <li>
+                                    <Link to={'home'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Homepage">
+                                        {/* Home icon */}
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+                                        <span className="is-drawer-close:hidden">Homepage</span>
+                                    </Link>
+                                </li>
 
-                        {/* Add Lesson Page */}
-                        <li>
-                            <Link to={'add-lesson'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Add Lesson">
+                                {/* Add Lesson Page */}
+                                <li>
+                                    <Link to={'add-lesson'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Add Lesson">
 
-                                <MdAddCircleOutline />
-                                <span className="is-drawer-close:hidden">Add Lesson</span>
-                            </Link>
-                        </li>
-
-
-                        {/* My Lesson Page */}
-                        <li>
-                            <Link to={'my-lesson'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Lesson">
-
-                                <FaUserGraduate />
-                                <span className="is-drawer-close:hidden">My Lesson</span>
-                            </Link>
-                        </li>
-
-                        {/* My favorites Page */}
-                        <li>
-                            <Link to={'my-favorites'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip=" My favorites">
-
-                                <FaHeartPulse />
-                                <span className="is-drawer-close:hidden"> My favorites</span>
-                            </Link>
-                        </li>
-
-                        {/* Profile Page */}
-                        <li>
-                            <Link to={'profile'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Profile">
-
-                                <FaUserAlt />
-                                <span className="is-drawer-close:hidden">Profile</span>
-                            </Link>
-                        </li>
+                                        <MdAddCircleOutline />
+                                        <span className="is-drawer-close:hidden">Add Lesson</span>
+                                    </Link>
+                                </li>
 
 
-                        {/* Admin Dashboard */}
+                                {/* My Lesson Page */}
+                                <li>
+                                    <Link to={'my-lesson'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Lesson">
 
-                        <li>
-                            <Link to={'manage-users'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Manage Users">
+                                        <FaUserGraduate />
+                                        <span className="is-drawer-close:hidden">My Lesson</span>
+                                    </Link>
+                                </li>
 
-                                <FaUser />
-                                <span className="is-drawer-close:hidden"> Manage Users</span>
-                            </Link>
-                        </li>
+                                {/* My favorites Page */}
+                                <li>
+                                    <Link to={'my-favorites'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip=" My favorites">
+
+                                        <FaHeartPulse />
+                                        <span className="is-drawer-close:hidden"> My favorites</span>
+                                    </Link>
+                                </li>
+
+                                {/* Profile Page */}
+                                <li>
+                                    <Link to={'profile'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Profile">
+
+                                        <FaUserAlt />
+                                        <span className="is-drawer-close:hidden">Profile</span>
+                                    </Link>
+                                </li>
+                            </>
+                        }
+
+
+                        {
+                            role === 'admin' &&
+                            <>
+
+                                {/* Admin Dashboard */}
+
+                                <li>
+                                    <Link to={'manage-users'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Manage Users">
+
+                                        <FaUser />
+                                        <span className="is-drawer-close:hidden"> Manage Users</span>
+                                    </Link>
+                                </li>
+
+                                <li>
+                                    <Link
+                                        to={'manage-lessons'}
+                                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                                        data-tip="Manage Lessons"
+                                    >
+                                        <MdNoteAdd />
+                                        <span className="is-drawer-close:hidden">Manage Lessons</span>
+                                    </Link>
+                                </li>
+                            </>
+                        }
+
 
 
                         {/* List item */}

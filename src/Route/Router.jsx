@@ -17,6 +17,8 @@ import LessonDetails from "../Pages/PublicLesson/LessonDetails";
 import Favorites from "../Pages/Dashboard/Favorites";
 import Profile from "../Pages/Dashboard/Profile";
 import ManageUsers from "../Pages/AdminDashboard/ManageUsers";
+import AdminRoutes from "./AdminRoutes";
+import ManageLessons from "../Pages/AdminDashboard/ManageLessons";
 
 export const router = createBrowserRouter([
   {
@@ -94,8 +96,12 @@ export const router = createBrowserRouter([
 
         {
             path: 'manage-users',
-            Component: ManageUsers
-        }
+            element: <AdminRoutes> <ManageUsers></ManageUsers></AdminRoutes>
+        },
+        {
+            path: 'manage-lessons',
+            element: <AdminRoutes> <ManageLessons></ManageLessons></AdminRoutes>
+        },
     ]
   }
 ]);

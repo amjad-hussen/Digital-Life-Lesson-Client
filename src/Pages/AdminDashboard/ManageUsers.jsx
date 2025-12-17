@@ -1,12 +1,12 @@
 import React from 'react';
-import useAuth from '../../Hooks/useAuth';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../../Component/SharedElement/Loading';
 import Swal from 'sweetalert2';
 
+
 const ManageUsers = () => {
-    // const {user} = useAuth()
+    
     const axiosSecure = useAxiosSecure()
 
     const { refetch, data: users, isLoading } = useQuery({
@@ -17,35 +17,79 @@ const ManageUsers = () => {
         }
     })
 
+    const UserLessonCount = ({ email }) => {
+        const { data, isLoading: lessonLoading } = useQuery({
+            queryKey: ['lesson-count', email],
+            queryFn: async () => {
+                const res = await axiosSecure.get(`/lessons/count/${email}`);
+                return res.data.count;
+            }
+
+        });
+        if (lessonLoading) {
+            return <Loading></Loading>
+        }
+
+        return <span>{data}</span>
+    }
+
 
     const handleMakeAdmin = (user) => {
         const roleInfo = { role: 'admin' }
-        axiosSecure.patch(`/users/${user._id}`, roleInfo)
-            .then(res => {
-                if (res.data.modifiedCount) {
-                    refetch()
-                    Swal.fire({
-                        title: `${user.displayName} marked as an Admin`,
-                        text: "Successfully Make Admin",
-                        icon: "success"
-                    });
-                }
-            })
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: `You want to Make Admin  ${user.displayName}  !`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Continue!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                axiosSecure.patch(`/users/${user._id}/role`, roleInfo)
+                    .then(res => {
+                        if (res.data.modifiedCount) {
+                            refetch()
+                            Swal.fire({
+                                title: `${user.displayName} marked as an Admin`,
+                                text: "Successfully Make Admin",
+                                icon: "success"
+                            });
+                        }
+                    })
+            }
+        });
     }
 
     const handleRemoveAdmin = (user) => {
         const roleInfo = { role: 'user' }
-        axiosSecure.patch(`/users/${user._id}`, roleInfo)
-            .then(res => {
-                if (res.data.modifiedCount) {
-                    refetch()
-                    Swal.fire({
-                        title: `${user.displayName} removed from Admin`,
-                        text: "Successfully Removed from Admin",
-                        icon: "success"
-                    });
-                }
-            })
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: `You want to remove ${user.displayName} from Admin !`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Continue!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                axiosSecure.patch(`/users/${user._id}/role`, roleInfo)
+                    .then(res => {
+                        if (res.data.modifiedCount) {
+                            refetch()
+                            Swal.fire({
+                                title: `${user.displayName} removed from Admin`,
+                                text: "Successfully Removed from Admin",
+                                icon: "success"
+                            });
+                        }
+                    })
+            }
+        });
     }
 
     if (isLoading) {
@@ -83,11 +127,11 @@ const ManageUsers = () => {
                                         <td>{user.displayName}</td>
                                         <td>{user.email}</td>
                                         <td>{user.role}</td>
-                                        <td>Blue</td>
+                                        <td> <UserLessonCount email={user.email} /></td>
                                         <td>
                                             {
                                                 user.role === 'admin' ?
-                                                    <button onClick={ () => handleRemoveAdmin(user)} className='btn bg-red-500 text-white font-bold '> Remove Admin</button> :
+                                                    <button onClick={() => handleRemoveAdmin(user)} className='btn bg-red-500 text-white font-bold '> Remove Admin</button> :
                                                     <button onClick={() => handleMakeAdmin(user)} className='btn bg-green-700 text-white font-bold '> Make Admin</button>
                                             }
 
