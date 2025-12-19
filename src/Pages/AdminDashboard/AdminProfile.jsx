@@ -12,26 +12,26 @@ const AdminProfile = () => {
     const axiosSecure = useAxiosSecure()
     const updateRef = useRef()
 
-    const {register, handleSubmit} = useForm()
+    const { register, handleSubmit } = useForm()
 
-    const { data: users, isLoading, refetch } = useQuery({
+    const { data: adminData = {}, isLoading, refetch } = useQuery({
         queryKey: ['adminProfile', user.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/users?email=${user.email}`);
-            return res.data;
+            return res.data; // single object return করবে
         },
     });
 
 
-    const adminData = users?.find(u => u.role === 'admin') || {
-        displayName: 'Unknown',
-        email: '',
-        photoURL: 'https://via.placeholder.com/150',
-        role: 'user',
-        isPremium: false
-    };
+    const safeAdminData = adminData || {
+    displayName: 'Unknown',
+    email: '',
+    photoURL: 'https://via.placeholder.com/150',
+    role: 'user',
+    isPremium: false
+};
 
-    console.log('Admin Data:', adminData);
+    
 
     const handleOpenModal = () => {
         updateRef.current.showModal()
@@ -64,16 +64,16 @@ const AdminProfile = () => {
             <div className='border border-gray-200 rounded-xl max-w-md mx-auto '>
                 <img className='w-full h-35' src={banner} alt="banner" />
 
-                <img className='mx-auto rounded-full overflow-hidden h-25 w-25 border-3 border-primary p-1' src={adminData.photoURL} alt=" profile" />
+                <img className='mx-auto rounded-full overflow-hidden h-25 w-25 border-3 border-primary p-1' src={safeAdminData.photoURL} alt=" profile" />
 
 
 
                 <div className='flex gap-3 justify-center'>
-                    <p className='btn-sm rounded-full bg-green-700 text-sm text-white font-semibold py-1 px-3 mt-2'> {adminData.role}</p>
+                    <p className='btn-sm rounded-full bg-green-700 text-sm text-white font-semibold py-1 px-3 mt-2'> {safeAdminData.role}</p>
 
                 </div>
-                <h1 className='text-primary font-bold text-2xl md:text-4xl text-center mt-1'>{adminData.displayName}</h1>
-                <p className='text-sm font-semibold text-primary text-center mt-1'>{adminData.email}</p>
+                <h1 className='text-primary font-bold text-2xl md:text-4xl text-center mt-1'>{safeAdminData.displayName}</h1>
+                <p className='text-sm font-semibold text-primary text-center mt-1'>{safeAdminData.email}</p>
                 <div className='px-10 flex gap-3 justify-between items-center my-4'>
 
                     <div className='mx-auto '>

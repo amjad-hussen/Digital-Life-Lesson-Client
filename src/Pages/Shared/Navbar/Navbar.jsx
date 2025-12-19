@@ -2,29 +2,56 @@ import React from 'react';
 import './Navbar.css'
 import logo from '../../../assets/logo-green.png'
 import userImg from '../../../assets/user.png'
-import { Link, NavLink } from 'react-router';
+import { Link, NavLink, useNavigate } from 'react-router';
 import useAuth from '../../../Hooks/useAuth';
 import Loading from '../../../Component/SharedElement/Loading';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import useRole from '../../../Hooks/useRole';
 const Navbar = () => {
     const { user, logOut, loading } = useAuth()
     const axiosSecure = useAxiosSecure()
+    const { role, roleLoading } = useRole();
+    const navigate = useNavigate();
 
-    const { refetch, data: currentUser , isLoading} = useQuery({
+    const {  data: currentUser, isLoading } = useQuery({
         queryKey: ['users', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/users?email=${user.email}`)
-            refetch()
+            
             return res.data
         }
 
     })
-    
+
+
+
 
     if (loading || isLoading) {
         return <Loading></Loading>
     }
+
+
+    const handleProfileClick = () => {
+        if (!roleLoading) {
+            if (role === 'admin') {
+                navigate('/dashboard/admin-profile');
+            } else {
+                navigate('/dashboard/profile');
+            }
+        }
+    };
+
+    const handleDashboardClick = () => {
+        if (!roleLoading) {
+            if (role === 'admin') {
+                navigate('/dashboard/admin-home');
+            } else {
+                navigate('/dashboard/home');
+            }
+        }
+    };
+
 
     const handleLogOut = () => {
         logOut()
@@ -103,13 +130,13 @@ const Navbar = () => {
                                     <div className="divider my-0"></div>
 
                                     <li>
-                                        <Link to="/dashboard/profile" className="hover:bg-gray-200 rounded-lg">
+                                        <Link onClick={handleProfileClick} className="hover:bg-gray-200 rounded-lg">
                                             Profile
                                         </Link>
                                     </li>
 
                                     <li>
-                                        <Link to="/dashboard/home" className="hover:bg-gray-200 rounded-lg">
+                                        <Link onClick={handleDashboardClick}  className="hover:bg-gray-200 rounded-lg">
                                             Dashboard
                                         </Link>
                                     </li>

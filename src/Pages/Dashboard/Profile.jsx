@@ -68,8 +68,9 @@ const Profile = () => {
     const sortedLessons = [...myLessons].sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
+    const dbUserData = dbUser || {};
+    const { displayName, isPremium, email, photoURL, role } = dbUserData
 
-    const { displayName, isPremium, email, photoURL, role } = dbUser
     return (
         <div className='bg-white p-10 my-5 rounded-xl'>
             <div className='border border-gray-200 rounded-xl max-w-md mx-auto '>
