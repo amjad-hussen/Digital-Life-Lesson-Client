@@ -21,6 +21,7 @@ import AdminRoutes from "./AdminRoutes";
 import ManageLessons from "../Pages/AdminDashboard/ManageLessons";
 import AdminProfile from "../Pages/AdminDashboard/AdminProfile";
 import DashboardAdmin from "../Pages/AdminDashboard/DashboardAdmin";
+import Error404 from "../Component/Error/Error404";
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
         {
             path: 'payment-cancelled',
             element: <PrivateRoute> <PaymentCancelled></PaymentCancelled></PrivateRoute>
+        }, 
+        {
+            path: '*', 
+            Component: Error404
         }
     ]
   }, 
@@ -112,6 +117,10 @@ export const router = createBrowserRouter([
             path: 'admin-home',
             element: <AdminRoutes><DashboardAdmin></DashboardAdmin></AdminRoutes>
         },
+        {
+            path: '*',
+            Component: Error404
+        }
     ]
   }
 ]);

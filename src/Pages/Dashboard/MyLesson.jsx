@@ -149,10 +149,10 @@ const MyLesson = () => {
 
                                 <td className=''>
                                     <div>
-                                        <span className='mr-3'>❤️ 20k</span>
-                                        <span>⭐ 10k</span>
+                                        <span className='mr-3'>❤️ {lesson.reactionsCount}</span>
+                                        <span>⭐ {lesson.savesCount}</span>
                                     </div>
-                                    <span> 12 jan 2025</span>
+                                    <span> {lesson.createdAt}</span>
 
                                 </td>
                                 <td className='flex gap-2'>
